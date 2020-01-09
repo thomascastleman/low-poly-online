@@ -18,13 +18,3 @@ function handleFile(f) {
     alert(`"${f.name}" isn't an image file!`);
   }
 }
-
-// find a scale factor that will fit an image preview on the screen
-function findFittingScale(img) {
-  // determine how much we need to scale to fit each dimension on the screen
-  let scaleH = windowHeight / img.height;
-  let scaleW = windowWidth / img.width;
-
-  // take the more extreme 
-  return min(scaleH, scaleW)
-}

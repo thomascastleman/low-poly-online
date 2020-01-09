@@ -1,25 +1,48 @@
 "use strict";
  
-let c, src, previewScale;
-const bg = 200;
+let src, previewScale, outputScale = 1;
+const BG = 200;
+const PREVIEW_SCALE_REDUCE = 0.75;
 
 function setup() {
-  c = createCanvas(windowWidth, windowHeight);
-	c.position(0, 0);
+  const c = createCanvas(windowWidth, windowHeight);
+  c.position(0, 0);
   c.style('z-index', '-1');
-  background(bg);
+  background(BG);
   createImageUploader();
 }
 
 function draw() {
-  background(bg);
+  background(BG);
   if (src) {
+    drawPreview(src);
+  }
+}
+
+function drawPreview(source) {
+  // compute ACTUAL scaling factor
+  let sc = PREVIEW_SCALE_REDUCE * previewScale;
+
+  push();
+    // move to center the image
+    translate((width - (sc * source.width)) / 2, (height - (sc * source.height)) / 2);
+
     // ensure image fits on screen
-    scale(previewScale);
+    scale(sc);
 
     // draw the uploaded image
-    image(src, 0, 0, src.width, src.height);
-  }
+    image(source, 0, 0, source.width, source.height);
+  pop();
+}
+
+// find a scale factor that will fit an image/graphics preview on the screen
+function findFittingScale(source) {
+  // determine how much we need to scale to fit each dimension on the screen
+  let scaleH = height / source.height;
+  let scaleW = width / source.width;
+
+  // take the more extreme 
+  return min(scaleH, scaleW)
 }
 
 /*
