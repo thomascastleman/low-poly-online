@@ -1,29 +1,25 @@
 "use strict";
  
-let src, bg, scaleFactor, c;
+let c, src, previewScale;
+const bg = 200;
 
 function setup() {
-  resetCanvas(windowWidth, windowHeight);
-  background(50);
-  imgUploader();
+  c = createCanvas(windowWidth, windowHeight);
+	c.position(0, 0);
+  c.style('z-index', '-1');
+  background(bg);
+  createImageUploader();
 }
 
 function draw() {
+  background(bg);
   if (src) {
     // ensure image fits on screen
-    scale(scaleFactor);
+    scale(previewScale);
 
     // draw the uploaded image
     image(src, 0, 0, src.width, src.height);
   }
-}
-
-// reset the canvas to a given width and height
-function resetCanvas(w, h) {
-  if (c) c.remove();
-  c = createCanvas(w, h);
-	c.position(0, 0);
-  c.style('z-index', '-1');
 }
 
 /*

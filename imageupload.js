@@ -1,5 +1,5 @@
 
-function imgUploader() {
+function createImageUploader() {
   let input = createFileInput(handleFile);
   input.position(0, 0);
 }
@@ -8,16 +8,23 @@ function imgUploader() {
 function handleFile(f) {
   if (f.type === 'image') {
     src = loadImage(f.data, () => {
-      // what factor will we need to scale by to fit on screen
-      scaleFactor = windowHeight / src.height;
+      // what factor will we need to scale by to fit an image preview on screen
+      previewScale = findFittingScale(src)
 
-      // set the canvas to be the same size as the scaled image
-      resetCanvas(src.width * scaleFactor, src.height * scaleFactor)
-      
       // call draw again
       redraw();
     });
   } else {
     alert(`"${f.name}" isn't an image file!`);
   }
+}
+
+// find a scale factor that will fit an image preview on the screen
+function findFittingScale(img) {
+  // determine how much we need to scale to fit each dimension on the screen
+  let scaleH = windowHeight / img.height;
+  let scaleW = windowWidth / img.width;
+
+  // take the more extreme 
+  return min(scaleH, scaleW)
 }

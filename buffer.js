@@ -1,14 +1,15 @@
 
-function createBuffer(scale) {
+function createBuffer(scale, bgImg) {
   // create graphics buffer with same ratio as image, scaled
-  let g = createGraphics(scale * src.width, scale * src.height);
+  let g = createGraphics(scale * bgImg.width, scale * bgImg.height);
 
-  // 
-  g.image(src, 0, 0, scale * src.width, scale * src.height);
+  // draw the background image to the buffer
+  g.image(bgImg, 0, 0, scale * bgImg.width, scale * bgImg.height);
+
   return g;
 }
 
-// save the current canvas
+// save a graphics buffer with a custom name
 function saveBuffer(g) {
   let name = prompt('Please enter a file name', 'lowpoly')
   if (!name) name = 'lowpoly';
