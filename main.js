@@ -1,15 +1,21 @@
 "use strict";
  
 let original,     // original uploaded source image
-  lowPoly,        // graphics buffer holding low poly image
-  preview;        // graphics buffer that holds both the original image and low poly **previews**
+  lowPoly;        // graphics buffer holding low poly image
 
-let previewPositions;
+let preview = {
+  buffer: null,     // graphics buffer holding preview content (original and low poly previews)
+  scale: null,      // how to scale the total preview window to fit on screen
+  positions: null   // the positions of the original / low poly images within the preview (side-by-side vs top-bottom)
+}
 
-// scaling factors
-let previewScale, outputScale = 1;
-const PREVIEW_SCALE_REDUCE = 0.85;
+// user-determined parameters for the low poly output
+let params = {
+  outputScale: 1,
+  detailFactor: 0.11
+}
 
+const PREVIEW_SCALE_REDUCE = 0.85;  // how much to scale down the preview window from the window dimensions (not full screen)
 const BG = 200; // background color
 
 function setup() {
@@ -22,14 +28,14 @@ function setup() {
 
 function draw() {
   background(BG);
-  if (preview) {
-    drawPreview(preview);
+  if (preview.buffer) {
+    drawPreview(preview.buffer, preview.scale);
   }
 }
 
-function drawPreview(source) {
+function drawPreview(source, scaleFactor) {
   // compute ACTUAL scaling factor
-  let sc = PREVIEW_SCALE_REDUCE * previewScale;
+  let sc = PREVIEW_SCALE_REDUCE * scaleFactor;
 
   push();
     // move to center the image
@@ -41,6 +47,16 @@ function drawPreview(source) {
     // draw the uploaded image
     image(source, 0, 0, source.width, source.height);
   pop();
+}
+
+// recompute and display a low poly
+function updateLowPoly() {
+  generateLowPoly();  // compute a new low poly
+  updatePreview();    // display it in the preview
+}
+
+function saveLowPoly() {
+  saveBuffer(lowPoly);
 }
 
 // find a scale factor that will fit an image/graphics preview on the screen

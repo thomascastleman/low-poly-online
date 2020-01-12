@@ -6,8 +6,17 @@
         <script type="text/javascript" language="javascript" src="main.js"></script>
         <script type="text/javascript" language="javascript" src="imageupload.js"></script>
         <script type="text/javascript" language="javascript" src="buffer.js"></script>
+        <script type="text/javascript" language="javascript" src="lowpoly.js"></script>
+        <style>
+            #controls {
+                margin-top: 30px;
+            }
+        </style>
     </head>
     <body>
-        <!-- <button id="save" onclick="saveLowPoly();">Save</button> -->
+        <div id="controls">
+            <button id="generate" onclick="updateLowPoly();">Generate Low Poly</button><br>
+            <button id="save" onclick="saveLowPoly();">Save</button>
+        </div>
     </body>
 </html>
