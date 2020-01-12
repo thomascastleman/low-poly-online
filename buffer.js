@@ -1,5 +1,5 @@
 
-function createBuffer(scale, bgImg) {
+function createBufferFromImg(bgImg, scale=1) {
   // create graphics buffer with same ratio as image, scaled
   let g = createGraphics(scale * bgImg.width, scale * bgImg.height);
 
