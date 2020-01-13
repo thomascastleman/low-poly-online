@@ -69,7 +69,7 @@ function updateLowPoly() {
   if (original) {
     // pull parameters from user input
     updateParams();
-    
+
     // if all parameters are defined
     if (params.outputScale && params.detailFactor && params.blurKernelSize) {
       generateLowPoly();  // compute a new low poly
