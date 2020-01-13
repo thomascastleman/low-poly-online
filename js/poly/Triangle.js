@@ -19,9 +19,9 @@ class Triangle {
   // check if point within circumcircle of this triangle
   // p :: p5.Vector -> Boolean
   containsInCircumcircle(p) {
-      const ab = norm(this.v1);
-      const cd = norm(this.v2);
-      const ef = norm(this.v3);
+      const ab = squareComponents(this.v1);
+      const cd = squareComponents(this.v2);
+      const ef = squareComponents(this.v3);
       
       const circumX = (ab * (this.v3.y - this.v2.y) + cd * (this.v1.y - this.v3.y) + ef * (this.v2.y - this.v1.y)) / (this.v1.x * (this.v3.y - this.v2.y) + this.v2.x * (this.v1.y - this.v3.y) + this.v3.x * (this.v2.y - this.v1.y));
       const circumY = (ab * (this.v3.x - this.v2.x) + cd * (this.v1.x - this.v3.x) + ef * (this.v2.x - this.v1.x)) / (this.v1.y * (this.v3.x - this.v2.x) + this.v2.y * (this.v1.x - this.v3.x) + this.v3.y * (this.v2.x - this.v1.x));

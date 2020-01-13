@@ -50,7 +50,7 @@ class DelaunayTriangulation {
         for (let e = 0; e < 3; e++) {
           // assume edge not shared
           shared = false;
-          
+
           if (e < 2) {
             // construct edge from each pair of vertices
             edge = new Edge(t.vertices[e], t.vertices[e + 1]);
@@ -132,9 +132,6 @@ class DelaunayTriangulation {
         notConnectedToSuper.push(t);
       }
     }
-
-    /// ddeeeeebg 
-    console.log(this.triangles);
 
     this.triangles = notConnectedToSuper;
 

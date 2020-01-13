@@ -14,38 +14,33 @@ function generateLowPoly() {
 
   console.log(points.length + " points in point set.");
 
-  // displayBuffer = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
-  // displayBuffer.background(200);
-
-  // showPointSet(points);
-
-  // preview.buffer.push();
-  //   preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y);
-  //   preview.buffer.scale(1 / params.outputScale);
-  //   preview.buffer.image(displayBuffer, 0, 0);
-  // preview.buffer.pop();
+  // ---------------------------------------------------- DEBUG ----------------------------------------------------------
+  displayBuffer = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
+  displayBuffer.background(200);
 
   // compute blurred image
   kernel = getKernel(params.blurKernelSize);
   blur = boxBlur(original, kernel);
 
-  // displayBuffer.push();
-  //   displayBuffer.scale(params.outputScale);
-  //   // draw source image as background
-  //   displayBuffer.image(blur, 0, 0);
-  // displayBuffer.pop();
+  displayBuffer.push();
+    displayBuffer.scale(params.outputScale);
+    // draw source image as background
+    displayBuffer.image(blur, 0, 0);
+  displayBuffer.pop();
 
-  // preview.buffer.push();
-  //   preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y);
-  //   preview.buffer.scale(1 / params.outputScale);
-  //   preview.buffer.image(displayBuffer, 0, 0);
-  // preview.buffer.pop();
+  showPointSet(points);
 
-  // // compute Delaunay triangulation on set of points placed on image
-  // dt = new DelaunayTriangulation(points);
+  preview.buffer.push();
+    preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y);
+    preview.buffer.scale(1 / params.outputScale);
+    preview.buffer.image(displayBuffer, 0, 0);
+  preview.buffer.pop();
 
-  // // add color to triangulation based on blurred image
-  // blurColorizeTriangulation(blur, dt);
+  // compute Delaunay triangulation on set of points placed on image
+  dt = new DelaunayTriangulation(points);
+
+  // add color to triangulation based on blurred image
+  blurColorizeTriangulation(blur, dt);
 
   // lowPoly.push();
   //   lowPoly.scale(params.outputScale);
@@ -54,8 +49,8 @@ function generateLowPoly() {
   //   //lowPoly.image(blur, 0, 0);
   // lowPoly.pop();
 
-  // // display colored triangulation
-  // dt.display(lowPoly);
+  // display colored triangulation
+  dt.display(lowPoly);
 }
 
 function zeroArray(w, h) {
@@ -79,14 +74,17 @@ function generatePointSet(energies, img) {
 
   let maxEnergy = 0;  // maximum energy value for later relativization
 
+  // give us access to the pixels array
+  img.loadPixels();
+
   // loop through all fully surrounded (x,y) positions in image
   for (let x = 1; x < img.width - 1; x++) {
     for (let y = 1; y < img.height - 1; y++) {
       // get colors of neighboring pixels      
-      let above = img.get(x, y - 1);
-      let below = img.get(x, y + 1);
-      let left = img.get(x - 1, y);
-      let right = img.get(x + 1, y);
+      let above = accessColor(x, y - 1, img); // img.get(x, y - 1);
+      let below = accessColor(x, y + 1, img); // img.get(x, y + 1);
+      let left = accessColor(x - 1, y, img); // img.get(x - 1, y);
+      let right = accessColor(x + 1, y, img); // img.get(x + 1, y);
 
       // calculate total energy of this pixel by summing horizontal and vertical gradients
       let energy = gradient(left, right) + gradient(above, below);
@@ -165,7 +163,6 @@ function getKernel(n) {
     img :: p5.Image, kernel :: List<List<Float>> -> p5.Image */
 function boxBlur(img, kernel) {
   console.log(`Computing box blur of ${img.width}x${img.height} source image with ${kernel.length}x${kernel.length} kernel... `);
-  console.log(`Total operations: ${img.width * img.height * kernel.length * kernel.length}`);
 
   const blur = createImage(img.width, img.height);
 
@@ -185,12 +182,9 @@ function boxBlur(img, kernel) {
         for (let kx = -halfK; kx <= halfK; kx++) {
           // if position valid (not outside image)
           if (y + ky >= 0 && x + kx >= 0 && y + ky < img.height && x + kx < img.width) {
-            // find the color of this pixel
-            //let c = img.get(x + kx, y + ky);
-            
             // calculate start position of this pixel in pixels array
             // (* 4 because pixels array contains R, G, B, and alpha values)
-            let pos = ((y + ky) * img.width + (x + kx)) * 4;
+            let pos = pixelPosition(x + kx, y + ky, img.width); // ((y + ky) * img.width + (x + kx)) * 4;
 
             // how much do we need to scale it by
             let kScale = kernel[ky + halfK][kx + halfK];
@@ -203,7 +197,7 @@ function boxBlur(img, kernel) {
         }
       }
 
-      let pixelPos = ((y * img.width) + x) * 4;
+      let pixelPos = pixelPosition(x, y, img.width)
 
       // in blurred image, set pixel color based on kernel sums
       blur.pixels[pixelPos] = sumR;

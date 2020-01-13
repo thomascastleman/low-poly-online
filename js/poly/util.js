@@ -17,7 +17,7 @@ function vecEq(v1, v2) {
 
 // square components 
 // v :: p5.Vector --> Float
-function norm(v) {
+function squareComponents(v) {
   return (v.x * v.x) + (v.y * v.y);
 }
 
@@ -42,4 +42,17 @@ function visualEnergyMatrix(energies) {
   }
   e.updatePixels();
   return e
+}
+
+// map x, y coordinates onto the index in the pixels array of a given pixel (w is image width)
+// x :: int, y :: int, w :: int
+function pixelPosition(x, y, w) {
+  return ((y * w) + x) * 4;
+}
+
+// get the color of a pixel in an image, efficiently using pixels array (pixels must be loaded!!)
+// x :: int, y :: int, img :: p5.Image
+function accessColor(x, y, img) {
+  let i = pixelPosition(x, y, img.width)
+  return color(img.pixels[i], img.pixels[i + 1], img.pixels[i + 2], img.pixels[i + 3])
 }
