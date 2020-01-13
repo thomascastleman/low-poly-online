@@ -40,26 +40,26 @@ function createPreview() {
     }
   }
 
-  initializeLowPoly();
-
-  updatePreview();
-}
-
-function initializeLowPoly() {
-  // create the low poly buffer, scaled as desired
-  lowPoly = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
-  lowPoly.background(255)
+  // render the preview with a placeholder for the non-existent low poly
+  updatePreview(original, lowPolyPlaceholder());
 }
 
 // redraw both the original and low poly images to the preview buffer
-function updatePreview() {
+function updatePreview(firstImg, secondImg) {
   // draw the original image to the preview buffer
-  preview.buffer.image(original, preview.positions.original.x, preview.positions.original.y)
+  preview.buffer.image(firstImg, preview.positions.original.x, preview.positions.original.y)
 
   // draw the low poly to the preview buffer, scaling appropriately
   preview.buffer.push()
     preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y)
     preview.buffer.scale(1 / params.outputScale)
-    preview.buffer.image(lowPoly, 0, 0)
+    preview.buffer.image(secondImg, 0, 0)
   preview.buffer.pop();
+}
+
+// create a placeholder for where the low poly image will go
+function lowPolyPlaceholder() {
+  let p = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
+  p.background(160);
+  return p;
 }

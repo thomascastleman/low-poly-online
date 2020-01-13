@@ -1,7 +1,7 @@
 
 let dt, blur, kernel, points;
 
-// write the low poly image to the lowPoly buffer
+// write the low poly image to a buffer, and return it
 function generateLowPoly() {
 
   console.log(`Computing low poly with:
@@ -10,7 +10,7 @@ function generateLowPoly() {
     OUTPUT SCALE = ${params.outputScale}x`);
 
   // initialize low poly graphics buffer
-  lowPoly = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
+  let lp = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
 
   // array for storing relative energy of each pixel
   const energies = zeroArray(original.width, original.height);
@@ -28,16 +28,18 @@ function generateLowPoly() {
   // add color to triangulation based on blurred image
   blurColorizeTriangulation(blur, dt);
 
-  lowPoly.push();
+  lp.push();
     // scale to desired output size
-    lowPoly.scale(params.outputScale);
+    lp.scale(params.outputScale);
 
     //display blurred image under low poly form to fill in any gaps
-    lowPoly.image(blur, 0, 0);
+    lp.image(blur, 0, 0);
 
     // display colored triangulation
-    dt.display(lowPoly);
-  lowPoly.pop();
+    dt.display(lp);
+  lp.pop();
+
+  return lp;
 }
 
 /*  Get an array of zeros, w x h 

@@ -1,18 +1,28 @@
 $(document).ready(() => {
+
+  function updateSlider() {
+    $('#detail-factor').text($('#detail-slider').slider('option', 'value'));
+  }
+
   $('#detail-slider').slider({
       value: 0.1,
       min: 0,
       max: 1,
       step: 0.01,
       change: () => {
-          $('#detail-factor').text($('#detail-slider').slider('option', 'value'));
+          updateSlider();
       },
       slide: () => {
-          $('#detail-factor').text($('#detail-slider').slider('option', 'value'));
+          updateSlider();
       }
   })
 
-  $('#detail-factor').text($('#detail-slider').slider('option', 'value'));
+  updateSlider();
+
+  function updateBlur() {
+    let b = $('#blur-slider').slider('option', 'value');
+    $('#blur-factor').text(`${b}x${b}`);
+  }
 
   $('#blur-slider').slider({
       value: 21,
@@ -20,14 +30,18 @@ $(document).ready(() => {
       max: 31,
       step: 2,
       change: () => {
-          $('#blur-factor').text($('#blur-slider').slider('option', 'value'));
+        updateBlur();
       },
       slide: () => {
-          $('#blur-factor').text($('#blur-slider').slider('option', 'value'));
+        updateBlur();
       }
   })
 
-  $('#blur-factor').text($('#blur-slider').slider('option', 'value'));
+  updateBlur();
+
+  $('#toggle').click(() => {
+    $('#paramContainer').slideToggle();
+  });
 });
 
 function updateParams() {
@@ -35,9 +49,6 @@ function updateParams() {
   params.detailFactor = parseFloat($('#detail-factor').text());
   params.blurKernelSize = parseFloat($('#blur-factor').text());
   params.visualize = $('#visualize').is(":checked");
-
-  // rebuild the low poly buffer since the output scalar may have changed
-  initializeLowPoly();
 }
 
 function resetOutputScale() {

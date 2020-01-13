@@ -34,7 +34,7 @@ let params = {
 let uploadName; // name of the image file uploaded
 const PREVIEW_SCALE_REDUCE = 0.85;  // how much to scale down the preview window from the window dimensions (not full screen)
 const BORDER_POINTS_ON_WIDTH = 13; // how many points will be placed across the width of the image on its borders
-const BG = 200; // background color
+const BG = 40; // background color
 
 function setup() {
   const c = createCanvas(windowWidth, windowHeight);
@@ -75,8 +75,8 @@ function updateLowPoly() {
 
     // if all parameters are defined
     if (params.outputScale && params.detailFactor && params.blurKernelSize) {
-      generateLowPoly();  // compute a new low poly
-      updatePreview();    // display it in the preview
+      lowPoly = generateLowPoly();  // compute a new low poly
+      updatePreview(original, lowPoly);    // display it in the preview
     } else {
       alert('Not all parameters were defined!');
     }

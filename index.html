@@ -1,5 +1,7 @@
 <html>
     <head>
+        <title>Low Poly Image Processor</title>
+
         <!-- jQuery & jQuery UI -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -29,25 +31,38 @@
     </head>
     <body>
         <div id="controls">
-            <p>Detail Factor</p>
-            <div id="detail-slider"></div>
-            <span id="detail-factor"></span>
-            <br>
+            <div class="param" id="fileInput" title="Choose an image file to convert into low poly form."></div>
 
-            <p>Blur Kernel Size</p>
-            <div id="blur-slider"></div>
-            <span id="blur-factor"></span>
-            <br>
+            <div id="paramContainer">
+                <div class="param" title="The higher the detail factor, the more the detail of the original image will be preserved in the triangulation.">
+                    <p>Detail Factor | <span id="detail-factor"></span></p>
+                    <div id="detail-slider"></div>
+                </div>
 
-            <span>Output Scaling Factor</span>
-            <input id="output-scale" type="number" value="1"/>
-            <br>
+                <div class="param" title="The higher the kernel size, the more blurred & smooth the triangulation colors will be.">
+                    <p>Blur Kernel Size | <span id="blur-factor"></span></p>
+                    <div id="blur-slider"></div>
+                </div>
 
-            <input id="visualize" type="checkbox"/><span>Visualize Process</span>
-            <br>
+                <div class="param" title="The output low poly image will be this times the size of the uploaded image.">
+                    <span>Output Scaling Factor</span>
+                    <input id="output-scale" type="number" value="1"/>
+                </div>
 
-            <button id="generate" onclick="updateLowPoly();">Generate Low Poly</button><br>
-            <button id="save" onclick="saveLowPoly();">Save Low Poly</button>
+                <!-- <div class="param">
+                    <input id="visualize" type="checkbox"/><span>Visualize Process</span>
+                </div> -->
+
+                <div class="param" title="Generate a new low poly image.">
+                    <button class="btn" id="generate" onclick="updateLowPoly();">Generate Low Poly</button>
+                </div>
+
+                <div class="param" title="Download the low poly image to your computer.">
+                    <button class="btn" id="save" onclick="saveLowPoly();">Save Low Poly</button>
+                </div>
+            </div>
+
+            <div id="toggle">Toggle Parameters</div>
         </div>
     </body>
 </html>

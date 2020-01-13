@@ -1,9 +1,10 @@
 
 function createImageUploader() {
   let input = createFileInput(handleFile);
-  input.position(0, 0);
+  
+  // place it inside the fileInput div
+  input.parent('fileInput');
 }
-
 
 // when file has been uploaded
 function handleFile(f) {
