@@ -14,25 +14,48 @@ function generateLowPoly() {
 
   console.log(points.length + " points in point set.");
 
+  // displayBuffer = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
+  // displayBuffer.background(200);
+
+  // showPointSet(points);
+
+  // preview.buffer.push();
+  //   preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y);
+  //   preview.buffer.scale(1 / params.outputScale);
+  //   preview.buffer.image(displayBuffer, 0, 0);
+  // preview.buffer.pop();
+
   // compute blurred image
   kernel = getKernel(params.blurKernelSize);
   blur = boxBlur(original, kernel);
 
-  // compute Delaunay triangulation on set of points placed on image
-  dt = new DelaunayTriangulation(points);
+  // displayBuffer.push();
+  //   displayBuffer.scale(params.outputScale);
+  //   // draw source image as background
+  //   displayBuffer.image(blur, 0, 0);
+  // displayBuffer.pop();
 
-  // add color to triangulation based on blurred image
-  blurColorizeTriangulation(blur, dt);
+  // preview.buffer.push();
+  //   preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y);
+  //   preview.buffer.scale(1 / params.outputScale);
+  //   preview.buffer.image(displayBuffer, 0, 0);
+  // preview.buffer.pop();
 
-  lowPoly.push();
-    lowPoly.scale(params.outputScale);
+  // // compute Delaunay triangulation on set of points placed on image
+  // dt = new DelaunayTriangulation(points);
 
-    // display blurred image under low poly form to fill in any gaps
-    //lowPoly.image(blur, 0, 0);
-  lowPoly.pop();
+  // // add color to triangulation based on blurred image
+  // blurColorizeTriangulation(blur, dt);
 
-  // display colored triangulation
-  dt.display(lowPoly);
+  // lowPoly.push();
+  //   lowPoly.scale(params.outputScale);
+
+  //   // display blurred image under low poly form to fill in any gaps
+  //   //lowPoly.image(blur, 0, 0);
+  // lowPoly.pop();
+
+  // // display colored triangulation
+  // dt.display(lowPoly);
 }
 
 function zeroArray(w, h) {
@@ -141,7 +164,8 @@ function getKernel(n) {
 /*  Compute a box blur of an image
     img :: p5.Image, kernel :: List<List<Float>> -> p5.Image */
 function boxBlur(img, kernel) {
-  console.log("Computing box blur of source image... ");
+  console.log(`Computing box blur of ${img.width}x${img.height} source image with ${kernel.length}x${kernel.length} kernel... `);
+  console.log(`Total operations: ${img.width * img.height * kernel.length * kernel.length}`);
 
   const blur = createImage(img.width, img.height);
 
@@ -160,21 +184,32 @@ function boxBlur(img, kernel) {
       for (let ky = -halfK; ky <= halfK; ky++) {
         for (let kx = -halfK; kx <= halfK; kx++) {
           // if position valid (not outside image)
-          if (y + ky >= 0 && x + kx >= 0 && y + ky < img.height && x + kx < img.width) {          
-            // calculate position of actual pixel in pixels array
-            let pos = (y + ky) * img.width + (x + kx);
+          if (y + ky >= 0 && x + kx >= 0 && y + ky < img.height && x + kx < img.width) {
+            // find the color of this pixel
+            //let c = img.get(x + kx, y + ky);
+            
+            // calculate start position of this pixel in pixels array
+            // (* 4 because pixels array contains R, G, B, and alpha values)
+            let pos = ((y + ky) * img.width + (x + kx)) * 4;
+
+            // how much do we need to scale it by
+            let kScale = kernel[ky + halfK][kx + halfK];
 
             // add kernel-scaled color values to their respective sums
-            sumR += kernel[ky + halfK][kx + halfK] * red(img.pixels[pos]);
-            sumG += kernel[ky + halfK][kx + halfK] * green(img.pixels[pos]);
-            sumB += kernel[ky + halfK][kx + halfK] * blue(img.pixels[pos]);
+            sumR += kScale * img.pixels[pos];     // red in pixel
+            sumG += kScale * img.pixels[pos + 1]; // green in pixel
+            sumB += kScale * img.pixels[pos + 2]; // blue in pixel
           }
         }
       }
 
+      let pixelPos = ((y * img.width) + x) * 4;
+
       // in blurred image, set pixel color based on kernel sums
-      //blur.pixels[y * img.width + x] = color(sumR, sumG, sumB);
-      blur.set(x, y, color(sumR, sumG, sumB));
+      blur.pixels[pixelPos] = sumR;
+      blur.pixels[pixelPos + 1] = sumG;
+      blur.pixels[pixelPos + 2] = sumB;
+      blur.pixels[pixelPos + 3] = 255;    // make alpha 255, completely visible
     }
   }
 

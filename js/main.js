@@ -3,6 +3,8 @@
 let original,     // original uploaded source image
   lowPoly;        // graphics buffer holding low poly image
 
+let displayBuffer;  // graphics buffer for temporary, intermediate visualizations of the low poly process
+
 let preview = {
   buffer: null,     // graphics buffer holding preview content (original and low poly previews)
   scale: null,      // how to scale the total preview window to fit on screen
