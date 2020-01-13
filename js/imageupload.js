@@ -8,6 +8,11 @@ function createImageUploader() {
 // when file has been uploaded
 function handleFile(f) {
   if (f.type === 'image') {
+    original = null;
+    lowPoly = null;
+    preview = {};
+    resetOutputScale();
+
     // remove file ext to get original name
     uploadName = f.name.replace(/\..*/g, '')
     

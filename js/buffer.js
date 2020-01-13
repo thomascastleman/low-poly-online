@@ -40,11 +40,15 @@ function createPreview() {
     }
   }
 
+  initializeLowPoly();
+
+  updatePreview();
+}
+
+function initializeLowPoly() {
   // create the low poly buffer, scaled as desired
   lowPoly = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
   lowPoly.background(255)
-
-  updatePreview();
 }
 
 // redraw both the original and low poly images to the preview buffer
@@ -54,8 +58,8 @@ function updatePreview() {
 
   // draw the low poly to the preview buffer, scaling appropriately
   preview.buffer.push()
-  preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y)
-  preview.buffer.scale(1 / params.outputScale)
-  preview.buffer.image(lowPoly, 0, 0)
+    preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y)
+    preview.buffer.scale(1 / params.outputScale)
+    preview.buffer.image(lowPoly, 0, 0)
   preview.buffer.pop();
 }

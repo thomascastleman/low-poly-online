@@ -31,7 +31,15 @@ $(document).ready(() => {
 });
 
 function updateParams() {
-  params.outputScale = parseInt($('#output-scale').val(), 10);
+  params.outputScale = parseFloat($('#output-scale').val());
   params.detailFactor = parseFloat($('#detail-factor').text());
   params.blurKernelSize = parseFloat($('#blur-factor').text());
+
+  // rebuild the low poly buffer since the output scalar may have changed
+  initializeLowPoly();
+}
+
+function resetOutputScale() {
+    params.outputScale = 1;
+    $('#output-scale').val(1)
 }
