@@ -11,10 +11,25 @@ let preview = {
 
 // user-determined parameters for the low poly output
 let params = {
+  /*  Factor by which to scale the dimensions of the output low poly image. Since the 
+      resolution of the low poly output is independent of the dimensions of the original
+      image, we can resize the output however we want and it will still look sharp.
+      For this reason, I call low poly the French toast of image processing. */
   outputScale: 1,
-  detailFactor: 0.11
+
+  /*  Float in [0, 1] indicating the frequency at which a pixel, if it is chosen probabilistically 
+      to have a point based on its energy, will actually get a point. Higher detail factor means more,
+      smaller triangles and therefore greater approximation of the source image--but also higher 
+      computing time. */
+  detailFactor: 0.11,
+
+  /*  Size of the kernel used in the box blur of the original image for coloring. The greater the kernel size,
+      the more intense the blur, meaning colors are more likely to be similar & fluid between neighboring 
+      triangles. */
+  blurKernelSize: 21
 }
 
+let uploadName; // name of the image file uploaded
 const PREVIEW_SCALE_REDUCE = 0.85;  // how much to scale down the preview window from the window dimensions (not full screen)
 const BG = 200; // background color
 
@@ -51,12 +66,15 @@ function drawPreview(source, scaleFactor) {
 
 // recompute and display a low poly
 function updateLowPoly() {
-  generateLowPoly();  // compute a new low poly
-  updatePreview();    // display it in the preview
+  if (original) {
+    generateLowPoly();  // compute a new low poly
+    updatePreview();    // display it in the preview
+  }
 }
 
 function saveLowPoly() {
-  saveBuffer(lowPoly);
+  if (lowPoly)
+    saveBuffer(lowPoly);
 }
 
 // find a scale factor that will fit an image/graphics preview on the screen

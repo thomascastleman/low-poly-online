@@ -8,6 +8,9 @@ function createImageUploader() {
 // when file has been uploaded
 function handleFile(f) {
   if (f.type === 'image') {
+    // remove file ext to get original name
+    uploadName = f.name.replace(/\..*/g, '')
+    
     // update the cache of the original image
     original = loadImage(f.data, () => {
 

@@ -1,9 +1,13 @@
 
 // save a graphics buffer with a custom name
 function saveBuffer(g) {
-  let name = prompt('Please enter a file name', 'lowpoly')
-  if (!name) name = 'lowpoly';
-  save(g, name + '.png')
+  let name = prompt('Please enter a file name', `${uploadName}_lowpoly.png`)
+
+  if (!name) {
+    return;
+  }
+
+  save(g, name)
 }
 
 // prep the preview object, and create the lowPoly buffer
