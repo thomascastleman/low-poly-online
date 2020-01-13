@@ -55,3 +55,9 @@ function resetOutputScale() {
     params.outputScale = 1;
     $('#output-scale').val(1)
 }
+
+// console.log and write to external console
+function externalLog(content) {
+  console.log(content);
+  $('#console').append(`${content}<br>`);
+}

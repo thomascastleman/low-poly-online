@@ -4,10 +4,10 @@ let dt, blur, kernel, points;
 // write the low poly image to a buffer, and return it
 function generateLowPoly() {
 
-  console.log(`Computing low poly with:
-    DETAIL FACTOR = ${params.detailFactor}
-    BLUR KERNEL  = ${params.blurKernelSize}x${params.blurKernelSize}
-    OUTPUT SCALE = ${params.outputScale}x`);
+  externalLog('Computing low poly with:');
+  externalLog(`DETAIL FACTOR = ${params.detailFactor}`);
+  externalLog(`BLUR KERNEL  = ${params.blurKernelSize}x${params.blurKernelSize}`);
+  externalLog(`OUTPUT SCALE = ${params.outputScale}x`);
 
   // initialize low poly graphics buffer
   let lp = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
@@ -61,7 +61,7 @@ function zeroArray(w, h) {
     Cache the relativized energy value of each pixel in an energies matrix.
     energies :: List<List<Float>>, img :: p5.Image -> List<p5.Vector> */
 function generatePointSet(energies, img) {
-  console.log("Generating point set... ");
+  externalLog("Generating point set... ");
 
   let maxEnergy = 0;  // maximum energy value for later relativization
 
@@ -129,8 +129,8 @@ function generatePointSet(energies, img) {
     }
   }
 
-  console.log("Done.");
-  console.log(`${points.length} points in point set.`);
+  externalLog("Done.");
+  externalLog(`${points.length} points in point set.`);
 
   return points;
 }
@@ -154,7 +154,7 @@ function getKernel(n) {
 /*  Compute a box blur of an image
     img :: p5.Image, kernel :: List<List<Float>> -> p5.Image */
 function boxBlur(img, kernel) {
-  console.log(`Computing box blur of ${img.width}x${img.height} source image with ${kernel.length}x${kernel.length} kernel... `);
+  externalLog(`Computing box blur of ${img.width}x${img.height} source image with ${kernel.length}x${kernel.length} kernel... `);
 
   const blur = createImage(img.width, img.height);
 
@@ -202,7 +202,7 @@ function boxBlur(img, kernel) {
   // apply changes to pixels in blurred image
   blur.updatePixels();
 
-  console.log("Done.");
+  externalLog("Done.");
 
   return blur;
 }
@@ -212,7 +212,7 @@ function boxBlur(img, kernel) {
     (Credit to Johnny Lindbergh)
     blur :: p5.Image, dt :: DelaunayTriangulation -> void */
 function blurColorizeTriangulation(blur, dt) {
-  console.log("Colorizing triangulation (blur method)... ");
+  externalLog("Colorizing triangulation (blur method)... ");
 
   blur.loadPixels();  // make pixels array accessible
 
@@ -233,5 +233,5 @@ function blurColorizeTriangulation(blur, dt) {
     t.b = blur.pixels[pos + 2];
   }
 
-  console.log("Done.");
+  externalLog("Done.");
 }
