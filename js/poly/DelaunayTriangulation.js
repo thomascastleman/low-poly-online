@@ -136,6 +136,7 @@ class DelaunayTriangulation {
     this.triangles = notConnectedToSuper;
 
     console.log("Done.");
+    console.log(`${this.triangles.length} triangles in triangulation.`);
   }
   
   // construct bounding triangle that contains all points in set

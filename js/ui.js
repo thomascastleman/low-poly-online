@@ -34,6 +34,7 @@ function updateParams() {
   params.outputScale = parseFloat($('#output-scale').val());
   params.detailFactor = parseFloat($('#detail-factor').text());
   params.blurKernelSize = parseFloat($('#blur-factor').text());
+  params.visualize = $('#visualize').is(":checked");
 
   // rebuild the low poly buffer since the output scalar may have changed
   initializeLowPoly();

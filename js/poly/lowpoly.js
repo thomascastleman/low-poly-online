@@ -1,8 +1,14 @@
 
 let dt, blur, kernel, points;
 
-// update the low poly buffer to have the low poly image
+// write the low poly image to the lowPoly buffer
 function generateLowPoly() {
+
+  console.log(`Computing low poly with:
+    DETAIL FACTOR = ${params.detailFactor}
+    BLUR KERNEL  = ${params.blurKernelSize}x${params.blurKernelSize}
+    OUTPUT SCALE = ${params.outputScale}x`);
+
   // initialize low poly graphics buffer
   lowPoly = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
 
@@ -12,29 +18,9 @@ function generateLowPoly() {
   // create a point set reflecting the energy of the src image
   points = generatePointSet(energies, original);
 
-  console.log(points.length + " points in point set.");
-
-  // ---------------------------------------------------- DEBUG ----------------------------------------------------------
-  displayBuffer = createGraphics(params.outputScale * original.width, params.outputScale * original.height);
-  displayBuffer.background(200);
-
   // compute blurred image
   kernel = getKernel(params.blurKernelSize);
   blur = boxBlur(original, kernel);
-
-  displayBuffer.push();
-    displayBuffer.scale(params.outputScale);
-    // draw source image as background
-    displayBuffer.image(blur, 0, 0);
-  displayBuffer.pop();
-
-  showPointSet(points);
-
-  preview.buffer.push();
-    preview.buffer.translate(preview.positions.lowPoly.x, preview.positions.lowPoly.y);
-    preview.buffer.scale(1 / params.outputScale);
-    preview.buffer.image(displayBuffer, 0, 0);
-  preview.buffer.pop();
 
   // compute Delaunay triangulation on set of points placed on image
   dt = new DelaunayTriangulation(points);
@@ -42,17 +28,20 @@ function generateLowPoly() {
   // add color to triangulation based on blurred image
   blurColorizeTriangulation(blur, dt);
 
-  // lowPoly.push();
-  //   lowPoly.scale(params.outputScale);
+  lowPoly.push();
+    // scale to desired output size
+    lowPoly.scale(params.outputScale);
 
-  //   // display blurred image under low poly form to fill in any gaps
-  //   //lowPoly.image(blur, 0, 0);
-  // lowPoly.pop();
+    //display blurred image under low poly form to fill in any gaps
+    lowPoly.image(blur, 0, 0);
 
-  // display colored triangulation
-  dt.display(lowPoly);
+    // display colored triangulation
+    dt.display(lowPoly);
+  lowPoly.pop();
 }
 
+/*  Get an array of zeros, w x h 
+    w :: int, h :: int -> List<List<Float>> */
 function zeroArray(w, h) {
   var a = [];
   for (let i = 0; i < w; i++) {
@@ -81,10 +70,10 @@ function generatePointSet(energies, img) {
   for (let x = 1; x < img.width - 1; x++) {
     for (let y = 1; y < img.height - 1; y++) {
       // get colors of neighboring pixels      
-      let above = accessColor(x, y - 1, img); // img.get(x, y - 1);
-      let below = accessColor(x, y + 1, img); // img.get(x, y + 1);
-      let left = accessColor(x - 1, y, img); // img.get(x - 1, y);
-      let right = accessColor(x + 1, y, img); // img.get(x + 1, y);
+      let above = accessColor(x, y - 1, img);
+      let below = accessColor(x, y + 1, img);
+      let left = accessColor(x - 1, y, img);
+      let right = accessColor(x + 1, y, img);
 
       // calculate total energy of this pixel by summing horizontal and vertical gradients
       let energy = gradient(left, right) + gradient(above, below);
@@ -105,7 +94,7 @@ function generatePointSet(energies, img) {
   /*  interval (in px) at which points will be added to point set 
    around the border of the image. This forces the triangulation to
    (mostly) cover the entirety of the dimensions of the image */
-  const borderPointInterval = floor(img.width / 9);
+  const borderPointInterval = floor(img.width / BORDER_POINTS_ON_WIDTH);
 
   // for each X position in image
   for (let x = 0; x < img.width; x++) {
@@ -139,6 +128,7 @@ function generatePointSet(energies, img) {
   }
 
   console.log("Done.");
+  console.log(`${points.length} points in point set.`);
 
   return points;
 }
@@ -222,6 +212,8 @@ function boxBlur(img, kernel) {
 function blurColorizeTriangulation(blur, dt) {
   console.log("Colorizing triangulation (blur method)... ");
 
+  blur.loadPixels();  // make pixels array accessible
+
   // for each triangle in triangulation
   for (let i = 0; i < dt.triangles.length; i++) {
     let t = dt.triangles[i];
@@ -231,12 +223,12 @@ function blurColorizeTriangulation(blur, dt) {
     const cy = floor((t.v1.y + t.v2.y + t.v3.y) / 3.0);
 
     // get color of pixel at centroid
-    const c = blur.get(cx, cy);
+    const pos = pixelPosition(cx, cy, blur.width);
 
     // set triangle color
-    t.r = red(c);
-    t.g = green(c);
-    t.b = blue(c);
+    t.r = blur.pixels[pos];
+    t.g = blur.pixels[pos + 1];
+    t.b = blur.pixels[pos + 2];
   }
 
   console.log("Done.");

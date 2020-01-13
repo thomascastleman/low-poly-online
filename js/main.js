@@ -33,6 +33,7 @@ let params = {
 
 let uploadName; // name of the image file uploaded
 const PREVIEW_SCALE_REDUCE = 0.85;  // how much to scale down the preview window from the window dimensions (not full screen)
+const BORDER_POINTS_ON_WIDTH = 13; // how many points will be placed across the width of the image on its borders
 const BG = 200; // background color
 
 function setup() {
@@ -82,6 +83,7 @@ function updateLowPoly() {
   }
 }
 
+// save the low poly image to your computer
 function saveLowPoly() {
   if (lowPoly)
     saveBuffer(lowPoly);
@@ -96,16 +98,3 @@ function findFittingScale(w, h) {
   // take the more extreme so we guarantee everything is shown
   return min(scaleH, scaleW)
 }
-
-/*
-  The plan:
-    Upload image file
-    Display a scaled down preview of the uploaded image (to verify correctness)
-    Create a graphics buffer same size of image--this is what we will draw triangles to
-      - or allow user to scale the size of the output relative to original image
-    Copy the original image into the buffer
-    Compute the low poly and write it to the buffer
-    Display a preview of the buffer (alongside the preview of the original)
-    Allow user to tweak parameters & run again if necessary
-    On save, download the BUFFER (full image size)
-*/
