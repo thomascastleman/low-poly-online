@@ -67,8 +67,16 @@ function drawPreview(source, scaleFactor) {
 // recompute and display a low poly
 function updateLowPoly() {
   if (original) {
-    generateLowPoly();  // compute a new low poly
-    updatePreview();    // display it in the preview
+    // pull parameters from user input
+    updateParams();
+    
+    // if all parameters are defined
+    if (params.outputScale && params.detailFactor && params.blurKernelSize) {
+      generateLowPoly();  // compute a new low poly
+      updatePreview();    // display it in the preview
+    } else {
+      alert('Not all parameters were defined!');
+    }
   }
 }
 
