@@ -1,4 +1,10 @@
+
+let $save, $loading;
+
 $(document).ready(() => {
+
+  $save = $('#save-container');
+  $loading = $('#loading');
 
   function updateSlider() {
     $('#detail-factor').text($('#detail-slider').slider('option', 'value'));
@@ -15,9 +21,7 @@ $(document).ready(() => {
       slide: () => {
           updateSlider();
       }
-  })
-
-  updateSlider();
+  });
 
   function updateBlur() {
     let b = $('#blur-slider').slider('option', 'value');
@@ -35,13 +39,18 @@ $(document).ready(() => {
       slide: () => {
         updateBlur();
       }
-  })
-
-  updateBlur();
+  });
 
   $('#toggle').click(() => {
     $('#paramContainer').slideToggle();
   });
+
+  // configure initial state
+  updateSlider();
+  updateBlur();
+  $('#loading').hide();
+  $('#save-container').hide();
+  hideGenerate();
 });
 
 function updateParams() {
@@ -60,4 +69,42 @@ function resetOutputScale() {
 function externalLog(content) {
   console.log(content);
   $('#console').append(`${content}<br>`);
+}
+
+function showGenerate(cb) {
+  $('#generate-container').show(cb);
+}
+
+function hideGenerate(cb) {
+  $('#generate-container').hide(cb);
+}
+
+function showSave(cb) {
+  $save.show(cb);
+}
+
+function hideSave(cb) {
+  $save.hide(50, cb);
+}
+
+function startLoad(cb) {
+  $loading.slideDown(200, cb);
+}
+
+function stopLoad(cb) {
+  $loading.hide(cb);
+}
+
+// hide save button and start loading
+function beginGenerating(cb) {
+  hideSave(() => {
+    startLoad(cb);
+  });
+}
+
+// stop loading and show the save button
+function endGenerating(cb) {
+  stopLoad(() => {
+    showSave(cb);
+  });
 }

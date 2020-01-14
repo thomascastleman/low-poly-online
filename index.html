@@ -2,6 +2,9 @@
     <head>
         <title>Low Poly Image Processor</title>
 
+        <!-- FontAwesome for icons -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
         <!-- jQuery & jQuery UI -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -25,9 +28,6 @@
 
         <!-- stylesheet -->
         <link rel="stylesheet" type="text/css" href="css/main.css">
-        <script>
-
-        </script>
     </head>
     <body>
         <div id="controls">
@@ -53,12 +53,19 @@
                     <input id="visualize" type="checkbox"/><span>Visualize Process</span>
                 </div> -->
 
-                <div class="param" title="Generate a new low poly image.">
-                    <button class="btn" id="generate" onclick="updateLowPoly();">Generate Low Poly</button>
+                <div id="generate-container" class="param" title="Generate a new low poly image.">
+                    <button class="btn" id="generate" onclick="updateLowPoly();"><i class="far fa-image icon"></i>Generate</button>
                 </div>
 
-                <div class="param" title="Download the low poly image to your computer.">
-                    <button class="btn" id="save" onclick="saveLowPoly();">Save Low Poly</button>
+                <div id="loading">
+                    <center>
+                    <img src="assets/loading.gif" width="100px"/><br>
+                    <span>Loading</span>
+                    </center>
+                </div>
+
+                <div id="save-container" class="param" title="Download the low poly image to your computer.">
+                    <button class="btn" id="save" onclick="saveLowPoly();"><i class="fas fa-file-download icon"></i>Save</button>
                 </div>
 
                 <div id="console" hidden><br></div>

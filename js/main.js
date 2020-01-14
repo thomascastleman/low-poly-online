@@ -75,8 +75,17 @@ function updateLowPoly() {
 
     // if all parameters are defined
     if (params.outputScale && params.detailFactor && params.blurKernelSize) {
-      lowPoly = generateLowPoly();  // compute a new low poly
-      updatePreview(original, lowPoly);    // display it in the preview
+      // set up the UI for generation
+      beginGenerating(() => {
+        // compute a new low poly
+        generateLowPoly((lp) => {
+          lowPoly = lp; // update global state
+          updatePreview(original, lowPoly);    // display it in the preview
+
+          // set UI to post-generation state
+          endGenerating();
+        });
+      });
     } else {
       alert('Not all parameters were defined!');
     }

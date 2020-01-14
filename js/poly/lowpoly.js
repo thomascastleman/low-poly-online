@@ -2,7 +2,7 @@
 let dt, blur, kernel, points;
 
 // write the low poly image to a buffer, and return it
-function generateLowPoly() {
+function generateLowPoly(cb) {
 
   externalLog('Computing low poly with:');
   externalLog(`DETAIL FACTOR = ${params.detailFactor}`);
@@ -39,7 +39,7 @@ function generateLowPoly() {
     dt.display(lp);
   lp.pop();
 
-  return lp;
+  cb(lp);
 }
 
 /*  Get an array of zeros, w x h 
