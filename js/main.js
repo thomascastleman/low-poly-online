@@ -23,12 +23,12 @@ let params = {
       to have a point based on its energy, will actually get a point. Higher detail factor means more,
       smaller triangles and therefore greater approximation of the source image--but also higher 
       computing time. */
-  detailFactor: 0.11,
+  detailFactor: 0.1,
 
   /*  Size of the kernel used in the box blur of the original image for coloring. The greater the kernel size,
       the more intense the blur, meaning colors are more likely to be similar & fluid between neighboring 
       triangles. */
-  blurKernelSize: 21
+  blurKernelSize: 11
 }
 
 let uploadName; // name of the image file uploaded

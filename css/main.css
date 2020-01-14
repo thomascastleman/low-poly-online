@@ -30,10 +30,6 @@
 	cursor: pointer;
 }
 
-/* input[type="file"] button {
-    color: blue;
-} */
-
 .param {
     margin-bottom: 10px;
 }
@@ -89,4 +85,16 @@
     color: white;
     margin-bottom: 10px;
     padding: 5px;
+}
+
+.ui-slider {
+    background-color: #4d88ff;
+}
+
+.ui-slider-handle:hover {
+    cursor: pointer;
+}
+
+.ui-slider-handle:active {
+    background-color: rgb(200, 200, 200)
 }

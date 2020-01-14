@@ -25,7 +25,7 @@ $(document).ready(() => {
   }
 
   $('#blur-slider').slider({
-      value: 21,
+      value: 11,
       min: 1,
       max: 31,
       step: 2,
